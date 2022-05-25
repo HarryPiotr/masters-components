@@ -1,0 +1,26 @@
+
+server.port: 8081
+
+kafka:
+  enabled: false
+  bootstrapServer: localhost:9094
+  inboundTopic: test-topic
+  consumerGroup: test-consumergroup-1
+
+rabbitmq:
+  enabled: false
+  server:
+    hostname: localhost
+    port: 9095
+  inboundQueue: test-queue-2
+
+rocketmq:
+  enabled: false
+  nameserver: localhost:9096
+  groupName: rocket-consumer-group-1
+  inboundTopic: test-queue-1
+
+activemq:
+  enabled: true
+  server: localhost:9101
+  inboundQueue: test-queue-1

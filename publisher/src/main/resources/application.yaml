@@ -1,0 +1,20 @@
+
+kafka:
+  bootstrapServer: localhost:9094
+  outboundTopic: test-topic
+  acks: 1
+
+rabbitmq:
+  server:
+    hostname: localhost
+    port: 9095
+  outboundQueue: test-queue-1
+
+rocketmq:
+  nameserver: localhost:9096
+  groupName: rocket-producer-group-1
+  outboundTopic: test-queue-1
+
+activemq:
+  server: localhost:9101
+  outboundQueue: test-queue-1
