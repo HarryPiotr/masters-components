@@ -18,3 +18,7 @@ rocketmq:
 activemq:
   server: localhost:9101
   outboundQueue: test-queue-1
+
+nsq:
+  server: localhost:9102
+  outboundTopic: test-topic-1

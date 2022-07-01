@@ -21,6 +21,12 @@ rocketmq:
   inboundTopic: test-queue-1
 
 activemq:
-  enabled: true
+  enabled: false
   server: localhost:9101
   inboundQueue: test-queue-1
+
+nsq:
+  enabled: true
+  server: localhost:9105
+  inboundTopic: test-topic-1
+  channel: test-channel-1

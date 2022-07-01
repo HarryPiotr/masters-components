@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pjatk.s24067.publisher.config.AppConfig;
+import pjatk.s24067.publisher.generic.PublisherController;
 
 import javax.jms.*;
 import java.util.Optional;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("activemq/publisher")
 @NoArgsConstructor
-public class ActiveMQPublisherController {
+public class ActiveMQPublisherController extends PublisherController {
 
     @Autowired
     private AppConfig appConfig;
@@ -26,6 +27,7 @@ public class ActiveMQPublisherController {
     private ActiveMQConnectionFactory activeConnectionFactory;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
+    @Override
     @PostMapping("/produce")
     public void produceMessages(@RequestParam("count") Optional<Integer> countOptional,
                                 @RequestParam("message") Optional<String> messageOptional) {

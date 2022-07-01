@@ -19,7 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("kafka/publisher")
 @NoArgsConstructor
-public class KafkaPublisherController implements PublisherController{
+public class KafkaPublisherController extends PublisherController {
 
     @Autowired
     private AppConfig appConfig;
@@ -32,6 +32,7 @@ public class KafkaPublisherController implements PublisherController{
         return publisher;
     }
 
+    @Override
     @PostMapping("/produce")
     public void produceMessages(@RequestParam("count") Optional<Integer> countOptional,
                                 @RequestParam("message") Optional<String> messageOptional) {

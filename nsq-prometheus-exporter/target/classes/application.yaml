@@ -1,0 +1,4 @@
+server.port: 8082
+logging.level.root: INFO
+
+brokerServer: ${NSQ_BROKER_SERVER:localhost:9103}

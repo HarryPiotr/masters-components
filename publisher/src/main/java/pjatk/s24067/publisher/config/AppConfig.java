@@ -15,5 +15,6 @@ public class AppConfig {
     private RabbitMQConfig rabbitmq = new RabbitMQConfig();
     private RocketMQConfig rocketmq = new RocketMQConfig();
     private ActiveMQConfig activemq = new ActiveMQConfig();
+    private NSQConfig nsq = new NSQConfig();
 
 }

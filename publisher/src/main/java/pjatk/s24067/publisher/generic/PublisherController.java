@@ -1,9 +1,15 @@
 package pjatk.s24067.publisher.generic;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.Optional;
 
-public interface PublisherController {
+public abstract class PublisherController {
 
-    void produceMessages(Optional<Integer> i, Optional<String> message);
+
+    @PostMapping("/produce")
+    public abstract void produceMessages(@RequestParam("count") Optional<Integer> countOptional,
+                                         @RequestParam("message") Optional<String> messageOptional);
 
 }

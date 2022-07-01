@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: pjatk.s24067.nsqprometheusexporter.NsqPrometheusExporterApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.34 s <<< FAILURE! - in pjatk.s24067.nsqprometheusexporter.NsqPrometheusExporterApplicationTests
+pjatk.s24067.nsqprometheusexporter.NsqPrometheusExporterApplicationTests  Time elapsed: 0.338 s  <<< ERROR!
+java.lang.IllegalStateException: Unable to find a @SpringBootConfiguration, you need to use @ContextConfiguration or @SpringBootTest(classes=...) with your test
+
