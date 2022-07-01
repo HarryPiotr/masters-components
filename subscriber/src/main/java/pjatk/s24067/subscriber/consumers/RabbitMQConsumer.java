@@ -12,18 +12,18 @@ import pjatk.s24067.subscriber.config.AppConfig;
 
 @Component
 @ConditionalOnProperty(value = "rabbitmq.enabled", havingValue = "true")
-public class RabbitMQConsumer {
+public class RabbitMQConsumer extends GenericConsumer {
 
     private AppConfig appConfig;
     private ConnectionFactory rabbitConnectionFactory;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
-    public RabbitMQConsumer(AppConfig appConfig, ConnectionFactory rabbitConnectionFactory) {
+    public RabbitMQConsumer(AppConfig appConfig, ConnectionFactory rabbitConnectionFactory) throws InterruptedException {
 
         this.appConfig = appConfig;
         this.rabbitConnectionFactory = rabbitConnectionFactory;
 
-        if(!initConsumer()) throw new RuntimeException("Rabbit Connection setup failed");
+        initConsumer();
     }
 
     private boolean initConsumer() {
@@ -37,6 +37,7 @@ public class RabbitMQConsumer {
             DeliverCallback messageCallback = (tag, payload) -> {
                 String message = new String(payload.getBody(), "UTF-8");
                 log.info(message);
+                incrementCounter(appConfig.getRabbitmq().getInboundQueue());
             };
 
             rabbitChannel.basicConsume(
@@ -51,5 +52,10 @@ public class RabbitMQConsumer {
         }
 
         return true;
+    }
+
+    @Override
+    public String getConsumerType() {
+        return "rabbitmq";
     }
 }

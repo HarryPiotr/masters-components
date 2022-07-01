@@ -15,19 +15,19 @@ import javax.jms.*;
 
 @Component
 @ConditionalOnProperty(value = "activemq.enabled", havingValue = "true")
-public class ActiveMQConsumer {
+public class ActiveMQConsumer extends GenericConsumer {
 
     private AppConfig appConfig;
     private ActiveMQConnectionFactory activeConnectionFactory;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
-    public ActiveMQConsumer(AppConfig appConfig, ActiveMQConnectionFactory factory) {
+    public ActiveMQConsumer(AppConfig appConfig, ActiveMQConnectionFactory factory) throws InterruptedException {
         this.appConfig = appConfig;
         this.activeConnectionFactory = factory;
-        initConsumer();
+        while(!initConsumer()) Thread.sleep(5000);
     }
 
-    private void initConsumer() {
+    private boolean initConsumer() {
 
         try {
 
@@ -43,14 +43,22 @@ public class ActiveMQConsumer {
             activeConsumer.setMessageListener(message -> {
                 try {
                     log.info(((TextMessage) message).getText());
+                    incrementCounter(appConfig.getActivemq().getInboundQueue());
                     message.acknowledge();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
+            return true;
         }
         catch(Exception e) {
             e.printStackTrace();
+            return false;
         }
+    }
+
+    @Override
+    public String getConsumerType() {
+        return "activemq";
     }
 }

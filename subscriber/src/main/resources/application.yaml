@@ -1,32 +1,29 @@
-
-server.port: 8081
-
 kafka:
-  enabled: false
-  bootstrapServer: localhost:9094
-  inboundTopic: test-topic
-  consumerGroup: test-consumergroup-1
+  enabled: ${KAFKA_ENABLED:false}
+  bootstrapServer: ${KAFKA_BOOTSTRAP_SERVER:localhost:9094}
+  inboundTopic: ${KAFKA_INBOUND_TOPIC:test-topic}
+  consumerGroup: ${KAFKA_CONSUMER_GROUP:test-consumergroup-1}
 
 rabbitmq:
-  enabled: false
+  enabled: ${RABBITMQ_ENABLED:false}
   server:
-    hostname: localhost
-    port: 9095
-  inboundQueue: test-queue-2
+    hostname: ${RABBITMQ_SERVER_HOSTNAME:localhost}
+    port: ${RABBITMQ_SERVER_PORT:9095}
+  inboundQueue: ${RABBITMQ_INBOUND_QUEUE:test-queue-2}
 
 rocketmq:
-  enabled: false
-  nameserver: localhost:9096
-  groupName: rocket-consumer-group-1
-  inboundTopic: test-queue-1
+  enabled: ${ROCKETMQ_ENABLED:false}
+  nameserver: ${ROCKETMQ_NAMESERVER:localhost:9096}
+  groupName: ${ROCKETMQ_GROUP_NAME:rocket-consumer-group-1}
+  inboundTopic: ${ROCKETMQ_INBOUND_TOPIC:test-queue-1}
 
 activemq:
-  enabled: false
-  server: localhost:9101
-  inboundQueue: test-queue-1
+  enabled: ${ACTIVEMQ_ENABLED:false}
+  server: ${ACTIVEMQ_SERVER:localhost:9101}
+  inboundQueue: ${ACTIVEMQ_INBOUND_QUEUE:test-queue-1}
 
 nsq:
-  enabled: true
-  server: localhost:9105
-  inboundTopic: test-topic-1
-  channel: test-channel-1
+  enabled: ${NSQ_ENABLED:false}
+  server: ${NSQ_SERVER:localhost:9105}
+  inboundTopic: ${NSQ_INBOUND_TOPIC:test-topic-1}
+  channel: ${NSQ_CHANNEL:test-channel-1}

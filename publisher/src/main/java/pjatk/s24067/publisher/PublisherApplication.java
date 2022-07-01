@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import pjatk.s24067.publisher.activemq.ActiveMQPublisherController;
 import pjatk.s24067.publisher.config.AppConfig;
 import pjatk.s24067.publisher.generic.PublisherController;
 import pjatk.s24067.publisher.kafka.KafkaPublisherController;

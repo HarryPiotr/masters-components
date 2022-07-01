@@ -1,10 +1,6 @@
 package pjatk.s24067.publisher.rocketmq;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
@@ -16,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pjatk.s24067.publisher.config.AppConfig;
+import pjatk.s24067.publisher.generic.PublisherController;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -23,13 +20,21 @@ import java.util.UUID;
 @RestController
 @RequestMapping("rocketmq/publisher")
 @NoArgsConstructor
-public class RocketMQPublisherController {
+public class RocketMQPublisherController extends PublisherController {
 
     @Autowired
     private AppConfig appConfig;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
+
+    @Override
     @PostMapping("/produce")
+    public void produceMessages(@RequestParam("count") Optional<Integer> countOptional,
+                                @RequestParam("message") Optional<String> messageOptional) {
+        produceMessages(countOptional, Optional.of("<no-tag>"), messageOptional);
+    }
+
+    @PostMapping("/produce-with-tag")
     public void produceMessages(@RequestParam("count") Optional<Integer> countOptional,
                                 @RequestParam("tag") Optional<String> tagOptional,
                                 @RequestParam("message") Optional<String> messageOptional) {
@@ -51,12 +56,17 @@ public class RocketMQPublisherController {
                                 messageOptional.orElse(UUID.randomUUID().toString()).getBytes()
                         )
                 );
-                log.info("Sent: {}", response.toString());
+                super.incrementCounter(appConfig.getRocketmq().getOutboundTopic());
             }
         } catch(Exception e) {
             e.printStackTrace();
         } finally{
             rocketProducer.shutdown();
         }
+    }
+
+    @Override
+    public String getPublisherType() {
+        return "rocketmq";
     }
 }

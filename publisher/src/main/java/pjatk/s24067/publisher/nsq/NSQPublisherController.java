@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pjatk.s24067.publisher.config.AppConfig;
+import pjatk.s24067.publisher.generic.PublisherController;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -17,13 +18,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("nsq/publisher")
 @NoArgsConstructor
-public class NSQPublisherController {
+public class NSQPublisherController extends PublisherController {
 
     @Autowired
     private AppConfig appConfig;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private Publisher publisher;
 
+    @Override
     @PostMapping("/produce")
     public void produceMessages(@RequestParam("count") Optional<Integer> countOptional,
                                 @RequestParam("message") Optional<String> messageOptional) {
@@ -39,6 +41,7 @@ public class NSQPublisherController {
                         appConfig.getNsq().getOutboundTopic(),
                         messageOptional.isPresent() ? messageOptional.get().getBytes() : UUID.randomUUID().toString().getBytes()
                 );
+                super.incrementCounter(appConfig.getNsq().getOutboundTopic());
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -69,5 +72,10 @@ public class NSQPublisherController {
         if(this.publisher == null)
             this.publisher = new Publisher(appConfig.getNsq().getServer());
         return this.publisher;
+    }
+
+    @Override
+    public String getPublisherType() {
+        return "nsq";
     }
 }

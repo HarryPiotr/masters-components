@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pjatk.s24067.publisher.config.AppConfig;
+import pjatk.s24067.publisher.generic.PublisherController;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("rabbitmq/publisher")
 @NoArgsConstructor
-public class RabbitMQPublisherController {
+public class RabbitMQPublisherController extends PublisherController {
 
     @Autowired
     private AppConfig appConfig;
@@ -28,6 +29,7 @@ public class RabbitMQPublisherController {
     private ConnectionFactory rabbitFactory;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
+    @Override
     @PostMapping("/produce")
     public void produceMessages(@RequestParam("count") Optional<Integer> countOptional,
                                 @RequestParam("message") Optional<String> messageOptional) {
@@ -46,9 +48,15 @@ public class RabbitMQPublisherController {
                         null,
                         messageOptional.isPresent() ? messageOptional.get().getBytes() : UUID.randomUUID().toString().getBytes()
                 );
+                super.incrementCounter(appConfig.getRabbitmq().getOutboundQueue());
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getPublisherType() {
+        return "rabbitmq";
     }
 }

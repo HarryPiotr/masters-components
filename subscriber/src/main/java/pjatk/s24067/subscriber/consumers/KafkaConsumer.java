@@ -10,7 +10,7 @@ import pjatk.s24067.subscriber.config.AppConfig;
 
 @Component
 @ConditionalOnProperty(value = "kafka.enabled", havingValue = "true")
-public class KafkaConsumer {
+public class KafkaConsumer extends GenericConsumer{
 
     @Autowired
     private AppConfig appConfig;
@@ -19,6 +19,12 @@ public class KafkaConsumer {
     @KafkaListener(topics="${kafka.inboundTopic}")
     public void consume(String message) {
         log.info(message);
+        incrementCounter(appConfig.getKafka().getInboundTopic());
+    }
+
+    @Override
+    public String getConsumerType() {
+        return "kafka";
     }
 
 }

@@ -15,12 +15,14 @@ import javax.jms.TextMessage;
 
 @Component
 @ConditionalOnProperty(value = "nsq.enabled", havingValue = "true")
-public class NSQConsumer {
+public class NSQConsumer extends GenericConsumer {
 
-    private AppConfig appConfig;
+    private static AppConfig appConfig;
     private static Logger log;
+    private static NSQConsumer instance;
 
     public NSQConsumer(AppConfig appConfig) {
+        instance = this;
         this.appConfig = appConfig;
         log = LoggerFactory.getLogger(this.getClass().getName());
         initConsumer();
@@ -29,6 +31,7 @@ public class NSQConsumer {
     private static void handleData(byte[] data) {
 
         log.info(new String(data));
+        getInstance().incrementCounter(appConfig.getNsq().getInboundTopic());
 
     }
 
@@ -39,4 +42,14 @@ public class NSQConsumer {
         log.info("Subscribed!");
 
     }
+
+    @Override
+    public String getConsumerType() {
+        return "nsq";
+    }
+
+    private static NSQConsumer getInstance() {
+        return instance;
+    }
+
 }

@@ -47,7 +47,8 @@ public class KafkaPublisherController extends PublisherController {
                         Instant.now().toEpochMilli(),
                         messageOptional.isPresent() ? messageOptional.get() : UUID.randomUUID().toString());
                 RecordMetadata metadata = publisher.send(record).get();
-                log.info("Sent message to partition {} offset {}", metadata.partition(), metadata.offset());
+                log.debug("Sent message to partition {} offset {}", metadata.partition(), metadata.offset());
+                super.incrementCounter(appConfig.getKafka().getOutboundTopic());
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -66,5 +67,10 @@ public class KafkaPublisherController extends PublisherController {
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         return properties;
+    }
+
+    @Override
+    public String getPublisherType() {
+        return "kafka";
     }
 }

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mvn kotlin:compile
+mvn package
+docker build -t harrypiotr/subscriber:1.0 .

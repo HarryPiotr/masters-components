@@ -50,6 +50,7 @@ public class ActiveMQPublisherController extends PublisherController {
                                 messageOptional.orElse(UUID.randomUUID().toString())
                         )
                 );
+                super.incrementCounter(appConfig.getActivemq().getOutboundQueue());
             }
 
             activeSession.close();
@@ -58,5 +59,10 @@ public class ActiveMQPublisherController extends PublisherController {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getPublisherType() {
+        return "activemq";
     }
 }

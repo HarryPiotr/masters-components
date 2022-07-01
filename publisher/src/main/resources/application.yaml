@@ -1,24 +1,24 @@
 
 kafka:
-  bootstrapServer: localhost:9094
-  outboundTopic: test-topic
-  acks: 1
+  bootstrapServer: ${KAFKA_BOOTSTRAP_SERVER:localhost:9094}
+  outboundTopic: ${KAFKA_OUTBOUND_TOPIC:test-topic}
+  acks: ${KAFKA_ACKS:1}
 
 rabbitmq:
   server:
-    hostname: localhost
-    port: 9095
-  outboundQueue: test-queue-1
+    hostname: ${RABBITMQ_SERVER_HOSTNAME:localhost}
+    port: ${RABBITMQ_SERVER_PORT:9095}
+  outboundQueue: ${RABBITMQ_OUTBOUND_QUEUE:test-queue-1}
 
 rocketmq:
-  nameserver: localhost:9096
-  groupName: rocket-producer-group-1
-  outboundTopic: test-queue-1
+  nameserver: ${ROCKETMQ_NAMESERVER:localhost:9096}
+  groupName: ${ROCKETMQ_GROUP_NAME:rocket-producer-group-1}
+  outboundTopic: ${ROCKETMQ_OUTBOUND_TOPIC:test-topic-1}
 
 activemq:
-  server: localhost:9101
-  outboundQueue: test-queue-1
+  server: ${ACTIVEMQ_SERVER:localhost:9101}
+  outboundQueue: ${ACTIVEMQ_OUTBOUND_QUEUE:test-queue-1}
 
 nsq:
-  server: localhost:9102
-  outboundTopic: test-topic-1
+  server: ${NSQ_SERVER:localhost:9102}
+  outboundTopic: ${NSQ_OUTBOUND_TOPIC:test-topic-1}

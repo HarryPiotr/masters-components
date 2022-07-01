@@ -25,17 +25,17 @@ public class ExporterRestController {
     private StatsdParser parser;
 
     @GetMapping("/metrics")
-    public void fetchAndReturnMetrics(HttpServletRequest request, HttpServletResponse reponse) {
+    public void fetchAndReturnMetrics(HttpServletRequest request, HttpServletResponse response) {
 
         String nsqStats = new RestTemplate().getForObject(String.format("http://%s/stats", appConfig.getBrokerServer()), String.class);
         String responseBody = parser.parseStats(nsqStats).stream().map(pm -> pm.toString()).collect(Collectors.joining("\n")) + "\n";
 
-        reponse.setContentType(MediaType.TEXT_PLAIN_VALUE);
-        reponse.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
-        reponse.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+        response.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
 
         // Prometheus only accepts gzip encoding
-        try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(reponse.getOutputStream())) {
+        try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(response.getOutputStream())) {
             gzipOutputStream.write(responseBody.getBytes(StandardCharsets.UTF_8));
             gzipOutputStream.finish();
         } catch (IOException e) {

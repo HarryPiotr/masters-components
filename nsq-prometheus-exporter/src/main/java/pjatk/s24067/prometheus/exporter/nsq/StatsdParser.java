@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pjatk.s24067.prometheus.exporter.PrometheusMetric;
 
 import java.util.*;
 import java.util.stream.Collectors;

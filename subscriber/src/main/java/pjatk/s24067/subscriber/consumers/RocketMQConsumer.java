@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @ConditionalOnProperty(value = "rocketmq.enabled", havingValue = "true")
-public class RocketMQConsumer {
+public class RocketMQConsumer extends GenericConsumer {
 
     @Autowired
     private AppConfig appConfig;
@@ -38,7 +38,10 @@ public class RocketMQConsumer {
 
             rocketConsumer.registerMessageListener((MessageListenerConcurrently) (messages, context) -> {
                 messages.stream()
-                        .forEach(msg -> log.info("Received message: {}", new String(msg.getBody())));
+                        .forEach(msg -> {
+                            log.info("Received message: {}", new String(msg.getBody()));
+                            incrementCounter(appConfig.getRocketmq().getInboundTopic());
+                        });
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             });
 
@@ -48,5 +51,10 @@ public class RocketMQConsumer {
         catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getConsumerType() {
+        return "rocketmq";
     }
 }
