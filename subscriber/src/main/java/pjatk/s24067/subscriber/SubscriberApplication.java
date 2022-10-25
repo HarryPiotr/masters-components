@@ -1,5 +1,12 @@
 package pjatk.s24067.subscriber;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.monitoring.MonitoringEvent;
+import com.amazonaws.monitoring.MonitoringListener;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.rabbitmq.client.ConnectionFactory;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -36,6 +43,7 @@ public class SubscriberApplication {
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, appConfig.getKafka().getConsumerGroup());
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, )
 		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		return new DefaultKafkaConsumerFactory<>(props);
 	}
@@ -60,6 +68,17 @@ public class SubscriberApplication {
 		return new ActiveMQConnectionFactory(
 				String.format("tcp://%s", appConfig.getActivemq().getServer())
 		);
+	}
+
+	@Bean
+	public AmazonSQS amazonSqsClient() {
+		BasicAWSCredentials credentials = new BasicAWSCredentials(appConfig.getSqs().getAccessKeyId(), appConfig.getSqs().getAccessKeySecret());
+		return AmazonSQSClientBuilder
+				.standard()
+				.withRegion(appConfig.getSqs().getRegion())
+				.withCredentials(new AWSStaticCredentialsProvider(credentials))
+				.withClientConfiguration(new ClientConfiguration().withConnectionTimeout(30000))
+				.build();
 	}
 
 }

@@ -95,7 +95,13 @@
 			<version>${kotlin.version}</version>
 		</dependency>
 
-    </dependencies>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-sqs</artifactId>
+			<version>1.12.307</version>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<plugins>

@@ -27,18 +27,19 @@ public class ServiceRestController {
     @Autowired
     private ApplicationContext context;
     public static final List<String> CONTAINED_CONSUMERS = Arrays.asList(
-            "ActiveMQConsumer",
-            "KafkaConsumer",
-            "NSQConsumer",
-            "RabbitMQConsumer",
-            "RocketMQConsumer"
+            "ActiveMQConsumer".toLowerCase(),
+            "KafkaConsumer".toLowerCase(),
+            "NSQConsumer".toLowerCase(),
+            "RabbitMQConsumer".toLowerCase(),
+            "RocketMQConsumer".toLowerCase(),
+            "SQSConsumer".toLowerCase()
     );
 
     @GetMapping("/metrics")
     public void gatherMetrics(HttpServletRequest request, HttpServletResponse response) {
 
         String responseBody = Arrays.stream(context.getBeanDefinitionNames())
-                .filter(name -> CONTAINED_CONSUMERS.contains(name))
+                .filter(name -> CONTAINED_CONSUMERS.contains(name.toLowerCase()))
                 .flatMap(name -> {
                     List<PrometheusMetric> metrics = new ArrayList<>();
                     GenericConsumer consumer = (GenericConsumer) context.getBean(name);

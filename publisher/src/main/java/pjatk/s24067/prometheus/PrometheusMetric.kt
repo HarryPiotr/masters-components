@@ -8,7 +8,6 @@ data class PrometheusMetric(
         var value: Double = Double.NaN
 ) {
     constructor() : this("", HashMap<String, String>(), Double.NaN)
-
     fun withName(name: String) = copy(name = name)
     fun withLabels(labels: MutableMap<String, String>) = copy(labels = labels)
     fun withLabel(labelName: String, labelValue: String) : PrometheusMetric {
@@ -17,7 +16,6 @@ data class PrometheusMetric(
         return result
     }
     fun withValue(value: Double) = copy(value = value)
-
     override fun toString() : String{
         val sb = StringBuilder()
         sb.append(name)

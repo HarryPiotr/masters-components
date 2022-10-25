@@ -27,3 +27,10 @@ nsq:
   server: ${NSQ_SERVER:localhost:9105}
   inboundTopic: ${NSQ_INBOUND_TOPIC:test-topic-1}
   channel: ${NSQ_CHANNEL:test-channel-1}
+
+sqs:
+  enabled: ${SQS_ENABLED:true}
+  queueName: ${SQS_QUEUE_NAME:test-s24067-sqs-standard}
+  region: ${SQS_REGION:eu-central-1}
+  accessKeyId: ${SQS_ACCESS_KEY_ID}
+  accessKeySecret: ${SQS_ACCESS_KEY_SECRET}

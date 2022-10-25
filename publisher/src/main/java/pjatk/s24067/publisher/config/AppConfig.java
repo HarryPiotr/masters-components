@@ -16,5 +16,6 @@ public class AppConfig {
     private RocketMQConfig rocketmq = new RocketMQConfig();
     private ActiveMQConfig activemq = new ActiveMQConfig();
     private NSQConfig nsq = new NSQConfig();
+    private SQSConfig sqs = new SQSConfig();
 
 }

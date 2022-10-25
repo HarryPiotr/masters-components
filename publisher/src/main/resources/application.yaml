@@ -1,4 +1,7 @@
 
+server:
+  port: 8081
+
 kafka:
   bootstrapServer: ${KAFKA_BOOTSTRAP_SERVER:localhost:9094}
   outboundTopic: ${KAFKA_OUTBOUND_TOPIC:test-topic}
@@ -22,3 +25,9 @@ activemq:
 nsq:
   server: ${NSQ_SERVER:localhost:9102}
   outboundTopic: ${NSQ_OUTBOUND_TOPIC:test-topic-1}
+
+sqs:
+  queueName: ${SQS_QUEUE_NAME:test-s24067-sqs-standard}
+  region: ${SQS_REGION:eu-central-1}
+  accessKeyId: ${SQS_ACCESS_KEY_ID}
+  accessKeySecret: ${SQS_ACCESS_KEY_SECRET}
