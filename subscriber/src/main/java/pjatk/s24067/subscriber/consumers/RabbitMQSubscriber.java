@@ -11,20 +11,22 @@ import org.springframework.stereotype.Component;
 import pjatk.s24067.subscriber.config.AppConfig;
 
 @Component
-@ConditionalOnProperty(value = "rabbitmq.msq.enabled", havingValue = "true")
-public class RabbitMQConsumer extends GenericConsumer {
+@ConditionalOnProperty(value = "rabbitmq.pubsub.enabled", havingValue = "true")
+public class RabbitMQSubscriber extends GenericConsumer {
 
     private AppConfig appConfig;
     private ConnectionFactory rabbitConnectionFactory;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
+    private String rabbitExchange;
+    private String rabbitBindingKey;
     private String rabbitQueue;
 
-    public RabbitMQConsumer(AppConfig appConfig, ConnectionFactory rabbitConnectionFactory) throws InterruptedException {
+    public RabbitMQSubscriber(AppConfig appConfig, ConnectionFactory rabbitConnectionFactory) throws InterruptedException {
 
         this.appConfig = appConfig;
         this.rabbitConnectionFactory = rabbitConnectionFactory;
-        this.rabbitQueue = appConfig.getRabbitmq().getMsq().getInboundQueue();
-
+        this.rabbitExchange = appConfig.getRabbitmq().getPubsub().getExchangeName();
+        this.rabbitBindingKey = appConfig.getRabbitmq().getPubsub().getBindingKey();
         initConsumer();
     }
 
@@ -34,30 +36,29 @@ public class RabbitMQConsumer extends GenericConsumer {
             Connection rabbitConnection = rabbitConnectionFactory.newConnection();
             Channel rabbitChannel = rabbitConnection.createChannel();
 
-            rabbitChannel.queueDeclare(rabbitQueue, false, false, false, null);
+            rabbitChannel.exchangeDeclare(rabbitExchange, "topic");
+            rabbitQueue = rabbitChannel.queueDeclare().getQueue();
 
             DeliverCallback messageCallback = (tag, payload) -> {
                 String message = new String(payload.getBody(), "UTF-8");
                 log.info(message);
-                incrementCounter(rabbitQueue);
+                incrementCounter(rabbitExchange);
             };
 
             rabbitChannel.basicConsume(
                     rabbitQueue,
                     true,
                     messageCallback,
-                    (tag) -> {
-                    });
+                    (tag) -> {});
         }
         catch(Exception e) {
             return false;
         }
-
         return true;
     }
 
     @Override
     public String getConsumerType() {
-        return "rabbitmq/msq";
+        return "rabbitmq/pubsub";
     }
 }

@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class RabbitMQConfig {
 
-    private boolean enabled = false;
     private ServerConfig server;
-    private String inboundQueue;
+    private RabbitMSQConfig msq;
+    private RabbitPubSubConfig pubsub;
 
 }

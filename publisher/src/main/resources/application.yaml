@@ -1,6 +1,6 @@
 
 server:
-  port: 8081
+  port: 8080
 
 kafka:
   bootstrapServer: ${KAFKA_BOOTSTRAP_SERVER:localhost:9094}
@@ -11,7 +11,11 @@ rabbitmq:
   server:
     hostname: ${RABBITMQ_SERVER_HOSTNAME:localhost}
     port: ${RABBITMQ_SERVER_PORT:9095}
-  outboundQueue: ${RABBITMQ_OUTBOUND_QUEUE:test-queue-1}
+  msq:
+    outboundQueue: ${RABBITMQ_MSQ_OUTBOUND_QUEUE:test-queue-1}
+  pubsub:
+    routingKey: ${RABBITMQ_PUBSUB_ROUTING_KEY:all}
+    exchangeName: ${RABBITMQ_PUBSUB_EXCHANGE_NAME:test-topic-1}
 
 rocketmq:
   nameserver: ${ROCKETMQ_NAMESERVER:localhost:9096}

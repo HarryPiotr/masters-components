@@ -2,4 +2,4 @@
 
 mvn kotlin:compile
 mvn package
-docker build -t harrypiotr/subscriber:1.0 .
+docker build -t harrypiotr/subscriber:1.2 .

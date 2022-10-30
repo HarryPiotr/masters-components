@@ -19,9 +19,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("rabbitmq/publisher/msq")
+@RequestMapping("rabbitmq/publisher/pubsub")
 @NoArgsConstructor
-public class RabbitMQPublisherController extends PublisherController {
+public class RabbitPubSubPublisherController extends PublisherController {
 
     @Autowired
     private AppConfig appConfig;
@@ -31,6 +31,8 @@ public class RabbitMQPublisherController extends PublisherController {
     private Connection rabbitConnection;
     private Channel rabbitChannel;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
+    private String rabbitExchange;
+    private String rabbitRoutingKey;
 
     @Override
     @PostMapping("/produce")
@@ -43,17 +45,19 @@ public class RabbitMQPublisherController extends PublisherController {
             if(rabbitConnection == null || !rabbitConnection.isOpen()) rabbitConnection = rabbitFactory.newConnection();
             if(rabbitChannel == null || !rabbitChannel.isOpen()) {
                 rabbitChannel = rabbitConnection.createChannel();
-                rabbitChannel.queueDeclare(appConfig.getRabbitmq().getMsq().getOutboundQueue(), false, false, false, null);
+                rabbitExchange = appConfig.getRabbitmq().getPubsub().getExchangeName();
+                rabbitRoutingKey = appConfig.getRabbitmq().getPubsub().getRoutingKey();
+                rabbitChannel.exchangeDeclare(rabbitExchange, "topic");
             }
 
             for(int i = 1; i <= count; i++) {
                 rabbitChannel.basicPublish(
-                        Strings.EMPTY,
-                        appConfig.getRabbitmq().getMsq().getOutboundQueue(),
+                        rabbitExchange,
+                        rabbitRoutingKey,
                         null,
                         messageOptional.isPresent() ? messageOptional.get().getBytes() : UUID.randomUUID().toString().getBytes()
                 );
-                super.incrementCounter(appConfig.getRabbitmq().getMsq().getOutboundQueue());
+                super.incrementCounter(rabbitRoutingKey);
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -62,6 +66,6 @@ public class RabbitMQPublisherController extends PublisherController {
 
     @Override
     public String getPublisherType() {
-        return "rabbitmq/msq";
+        return "rabbitmq/pubsub";
     }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 public class RabbitMQConfig {
 
     private ServerConfig server;
-    private String outboundQueue;
+    private RabbitMSQConfig msq;
+    private RabbitPubSubConfig pubsub;
 
 }
