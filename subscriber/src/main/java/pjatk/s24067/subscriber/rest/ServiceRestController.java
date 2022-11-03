@@ -31,6 +31,7 @@ public class ServiceRestController {
             "KafkaConsumer".toLowerCase(),
             "NSQConsumer".toLowerCase(),
             "RabbitMQConsumer".toLowerCase(),
+            "RabbitMQSubscriber".toLowerCase(),
             "RocketMQConsumer".toLowerCase(),
             "SQSConsumer".toLowerCase()
     );

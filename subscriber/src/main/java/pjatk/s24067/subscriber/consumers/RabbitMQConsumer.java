@@ -18,12 +18,16 @@ public class RabbitMQConsumer extends GenericConsumer {
     private ConnectionFactory rabbitConnectionFactory;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
     private String rabbitQueue;
+    private boolean persistentMessages;
+    private boolean exclusiveQueue;
 
     public RabbitMQConsumer(AppConfig appConfig, ConnectionFactory rabbitConnectionFactory) throws InterruptedException {
 
         this.appConfig = appConfig;
         this.rabbitConnectionFactory = rabbitConnectionFactory;
         this.rabbitQueue = appConfig.getRabbitmq().getMsq().getInboundQueue();
+        this.persistentMessages = appConfig.getRabbitmq().getMsq().isPersistentMessages();
+        this.exclusiveQueue = appConfig.getRabbitmq().getMsq().isExclusiveQueue();
 
         initConsumer();
     }
@@ -34,7 +38,7 @@ public class RabbitMQConsumer extends GenericConsumer {
             Connection rabbitConnection = rabbitConnectionFactory.newConnection();
             Channel rabbitChannel = rabbitConnection.createChannel();
 
-            rabbitChannel.queueDeclare(rabbitQueue, false, false, false, null);
+            rabbitChannel.queueDeclare(rabbitQueue, persistentMessages, exclusiveQueue, !persistentMessages, null);
 
             DeliverCallback messageCallback = (tag, payload) -> {
                 String message = new String(payload.getBody(), "UTF-8");

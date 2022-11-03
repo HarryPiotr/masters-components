@@ -10,11 +10,13 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.rabbitmq.client.ConnectionFactory;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -43,7 +45,7 @@ public class SubscriberApplication {
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, appConfig.getKafka().getConsumerGroup());
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, )
+		props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
 		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		return new DefaultKafkaConsumerFactory<>(props);
 	}
@@ -71,6 +73,7 @@ public class SubscriberApplication {
 	}
 
 	@Bean
+	@ConditionalOnProperty(value = "sqs.enabled", havingValue = "true")
 	public AmazonSQS amazonSqsClient() {
 		BasicAWSCredentials credentials = new BasicAWSCredentials(appConfig.getSqs().getAccessKeyId(), appConfig.getSqs().getAccessKeySecret());
 		return AmazonSQSClientBuilder

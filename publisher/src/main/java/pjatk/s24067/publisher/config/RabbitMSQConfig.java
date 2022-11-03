@@ -6,5 +6,7 @@ import lombok.Data;
 public class RabbitMSQConfig {
 
     private String outboundQueue;
+    private boolean persistentMessages;
+    private boolean exclusiveQueue;
 
 }

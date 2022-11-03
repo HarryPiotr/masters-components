@@ -7,5 +7,7 @@ public class RabbitMSQConfig {
 
     private boolean enabled = false;
     private String inboundQueue;
+    private boolean persistentMessages;
+    private boolean exclusiveQueue;
 
 }

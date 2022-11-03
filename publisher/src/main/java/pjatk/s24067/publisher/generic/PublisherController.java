@@ -23,17 +23,22 @@ public abstract class PublisherController {
                                          @RequestParam("message") Optional<String> messageOptional);
 
     @PostMapping("/produce-continuously")
-    public void produceMessagesContinuously(@RequestParam("length") Optional<Integer> messageLength) {
+    public void produceMessagesContinuously(@RequestParam("length") Optional<Integer> messageLength,
+                                            @RequestParam("threads") Optional<Integer> threadCountOptional) {
 
-        new Thread(() -> {
-            while(true) {
-                byte[] randomBytes = new byte[messageLength.orElse(10)];
-                random.nextBytes(randomBytes);
-                String randomMessage = new String(randomBytes, Charset.forName("UTF-8"));
-                produceMessages(Optional.of(1), Optional.of(randomMessage));
-            }
-        }).start();
+        int threadCount = threadCountOptional.orElse(1);
+        if(threadCount <= 0 || threadCount > 100) threadCount = 1;
 
+        for(int i = 0; i < threadCount; i++) {
+            new Thread(() -> {
+                while(true) {
+                    byte[] randomBytes = new byte[messageLength.orElse(10)];
+                    random.nextBytes(randomBytes);
+                    String randomMessage = new String(randomBytes, Charset.forName("UTF-8"));
+                    produceMessages(Optional.of(1), Optional.of(randomMessage));
+                }
+            }).start();
+        }
     }
 
     protected synchronized void incrementCounter(String topic) {

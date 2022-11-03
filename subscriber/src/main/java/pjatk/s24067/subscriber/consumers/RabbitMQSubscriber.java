@@ -20,6 +20,10 @@ public class RabbitMQSubscriber extends GenericConsumer {
     private String rabbitExchange;
     private String rabbitBindingKey;
     private String rabbitQueue;
+    private String queuePrefix;
+    private boolean persistentMessages;
+    private boolean exclusiveQueue;
+    private boolean namedQueue;
 
     public RabbitMQSubscriber(AppConfig appConfig, ConnectionFactory rabbitConnectionFactory) throws InterruptedException {
 
@@ -27,6 +31,10 @@ public class RabbitMQSubscriber extends GenericConsumer {
         this.rabbitConnectionFactory = rabbitConnectionFactory;
         this.rabbitExchange = appConfig.getRabbitmq().getPubsub().getExchangeName();
         this.rabbitBindingKey = appConfig.getRabbitmq().getPubsub().getBindingKey();
+        this.queuePrefix = appConfig.getRabbitmq().getPubsub().getQueuePrefix();
+        this.persistentMessages = appConfig.getRabbitmq().getPubsub().isPersistentMessages();
+        this.exclusiveQueue = appConfig.getRabbitmq().getPubsub().isExclusiveQueue();
+        this.namedQueue = appConfig.getRabbitmq().getPubsub().isNamedQueue();
         initConsumer();
     }
 
@@ -36,8 +44,12 @@ public class RabbitMQSubscriber extends GenericConsumer {
             Connection rabbitConnection = rabbitConnectionFactory.newConnection();
             Channel rabbitChannel = rabbitConnection.createChannel();
 
-            rabbitChannel.exchangeDeclare(rabbitExchange, "topic");
-            rabbitQueue = rabbitChannel.queueDeclare().getQueue();
+            rabbitChannel.exchangeDeclare(rabbitExchange, "topic", persistentMessages);
+            if(namedQueue)
+                rabbitQueue = rabbitChannel.queueDeclare(queuePrefix + rabbitExchange, persistentMessages, exclusiveQueue, false, null).getQueue();
+            else
+                rabbitQueue = rabbitChannel.queueDeclare().getQueue();
+            rabbitChannel.queueBind(rabbitQueue, rabbitExchange, rabbitBindingKey);
 
             DeliverCallback messageCallback = (tag, payload) -> {
                 String message = new String(payload.getBody(), "UTF-8");
@@ -52,6 +64,7 @@ public class RabbitMQSubscriber extends GenericConsumer {
                     (tag) -> {});
         }
         catch(Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;

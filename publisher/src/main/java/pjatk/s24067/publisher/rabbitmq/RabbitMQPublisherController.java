@@ -3,6 +3,7 @@ package pjatk.s24067.publisher.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.MessageProperties;
 import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ public class RabbitMQPublisherController extends PublisherController {
     private Connection rabbitConnection;
     private Channel rabbitChannel;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
+    private boolean persistentMessages;
+    private boolean exclusiveQueue;
 
     @Override
     @PostMapping("/produce")
@@ -43,14 +46,16 @@ public class RabbitMQPublisherController extends PublisherController {
             if(rabbitConnection == null || !rabbitConnection.isOpen()) rabbitConnection = rabbitFactory.newConnection();
             if(rabbitChannel == null || !rabbitChannel.isOpen()) {
                 rabbitChannel = rabbitConnection.createChannel();
-                rabbitChannel.queueDeclare(appConfig.getRabbitmq().getMsq().getOutboundQueue(), false, false, false, null);
+                persistentMessages = appConfig.getRabbitmq().getMsq().isPersistentMessages();
+                exclusiveQueue = appConfig.getRabbitmq().getMsq().isExclusiveQueue();
+                rabbitChannel.queueDeclare(appConfig.getRabbitmq().getMsq().getOutboundQueue(), persistentMessages, exclusiveQueue, !persistentMessages, null);
             }
 
             for(int i = 1; i <= count; i++) {
                 rabbitChannel.basicPublish(
                         Strings.EMPTY,
                         appConfig.getRabbitmq().getMsq().getOutboundQueue(),
-                        null,
+                        persistentMessages ? MessageProperties.MINIMAL_PERSISTENT_BASIC : null,
                         messageOptional.isPresent() ? messageOptional.get().getBytes() : UUID.randomUUID().toString().getBytes()
                 );
                 super.incrementCounter(appConfig.getRabbitmq().getMsq().getOutboundQueue());

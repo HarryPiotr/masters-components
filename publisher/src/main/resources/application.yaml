@@ -13,9 +13,12 @@ rabbitmq:
     port: ${RABBITMQ_SERVER_PORT:9095}
   msq:
     outboundQueue: ${RABBITMQ_MSQ_OUTBOUND_QUEUE:test-queue-1}
+    persistentMessages: ${RABBITMQ_MSQ_PERSISTENT_MESSAGES:false}
+    exclusiveQueue: ${RABBITMQ_MSQ_EXCLUSIVE_QUEUE:true}
   pubsub:
     routingKey: ${RABBITMQ_PUBSUB_ROUTING_KEY:all}
     exchangeName: ${RABBITMQ_PUBSUB_EXCHANGE_NAME:test-topic-1}
+    persistentMessages: ${RABBITMQ_PUBSUB_PERSISTENT_MESSAGES:false}
 
 rocketmq:
   nameserver: ${ROCKETMQ_NAMESERVER:localhost:9096}

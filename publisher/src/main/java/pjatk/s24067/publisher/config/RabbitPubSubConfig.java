@@ -7,5 +7,6 @@ public class RabbitPubSubConfig {
 
     private String routingKey;
     private String exchangeName;
+    private boolean persistentMessages;
 
 }

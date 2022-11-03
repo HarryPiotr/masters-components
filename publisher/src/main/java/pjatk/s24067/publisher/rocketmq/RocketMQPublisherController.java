@@ -25,6 +25,7 @@ public class RocketMQPublisherController extends PublisherController {
     @Autowired
     private AppConfig appConfig;
     private Logger log = LoggerFactory.getLogger(this.getClass().getName());
+    private DefaultMQProducer rocketProducer;
 
 
     @Override
@@ -41,12 +42,15 @@ public class RocketMQPublisherController extends PublisherController {
 
         int count = countOptional.orElse(1);
         String tag = tagOptional.orElse("<no-tag>");
-        DefaultMQProducer rocketProducer = new DefaultMQProducer(appConfig.getRocketmq().getGroupName());
 
 
         try{
-            rocketProducer.setNamesrvAddr(appConfig.getRocketmq().getNameserver());
-            rocketProducer.start();
+
+            if(rocketProducer == null) {
+                rocketProducer = new DefaultMQProducer(appConfig.getRocketmq().getGroupName());
+                rocketProducer.setNamesrvAddr(appConfig.getRocketmq().getNameserver());
+                rocketProducer.start();
+            }
 
             for(int i = 1; i <= count; i++) {
                 SendResult response = rocketProducer.send(
@@ -60,8 +64,6 @@ public class RocketMQPublisherController extends PublisherController {
             }
         } catch(Exception e) {
             e.printStackTrace();
-        } finally{
-            rocketProducer.shutdown();
         }
     }
 
