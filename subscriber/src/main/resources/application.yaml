@@ -36,6 +36,7 @@ activemq:
 nsq:
   enabled: ${NSQ_ENABLED:false}
   server: ${NSQ_SERVER:localhost:9105}
+  consumerCount: ${NSQ_CONSUMER_COUNT:1}
   inboundTopic: ${NSQ_INBOUND_TOPIC:test-topic-1}
   channel: ${NSQ_CHANNEL:test-channel-1}
 
@@ -45,3 +46,4 @@ sqs:
   region: ${SQS_REGION:eu-central-1}
   accessKeyId: ${SQS_ACCESS_KEY_ID}
   accessKeySecret: ${SQS_ACCESS_KEY_SECRET}
+  consumerCount: ${SQS_CONSUMER_COUNT:1}

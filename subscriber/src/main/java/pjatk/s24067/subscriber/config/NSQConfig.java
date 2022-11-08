@@ -9,5 +9,6 @@ public class NSQConfig {
     private String server;
     private String inboundTopic;
     private String channel;
+    private int consumerCount;
 
 }

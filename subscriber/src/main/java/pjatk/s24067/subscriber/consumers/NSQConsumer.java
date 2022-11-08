@@ -25,7 +25,9 @@ public class NSQConsumer extends GenericConsumer {
         instance = this;
         this.appConfig = appConfig;
         log = LoggerFactory.getLogger(this.getClass().getName());
-        initConsumer();
+        for(int i = 0; i < appConfig.getNsq().getConsumerCount(); i++) {
+            new Thread(() -> initConsumer()).start();
+        }
     }
 
     private static void handleData(byte[] data) {

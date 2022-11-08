@@ -10,5 +10,6 @@ public class SQSConfig {
     private String region;
     private String accessKeyId;
     private String accessKeySecret;
+    private int consumerCount;
 
 }

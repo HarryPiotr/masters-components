@@ -45,30 +45,34 @@ public class SQSConsumer extends GenericConsumer {
 
     private void initConsumer() throws InterruptedException {
 
-        log.info("Setting up the Long-Polling Consumer");
+        log.info("Initiating {} SQS Consumers", appConfig.getSqs().getConsumerCount());
 
-        new Thread(() -> {
-            ReceiveMessageRequest receiveRequest = new ReceiveMessageRequest()
-                    .withQueueUrl(queueUrl)
-                    .withWaitTimeSeconds(20);
+        for(int i = 0; i < appConfig.getSqs().getConsumerCount(); i++) {
+            log.info("Setting up the Long-Polling Consumer");
 
-            while(true) {
-                log.info("Polling...");
-                List<DeleteMessageBatchRequestEntry> messagesReceipts = sqs.receiveMessage(receiveRequest)
-                        .getMessages()
-                        .stream()
-                        .peek(message -> handleData(message.getBody()))
-                        .map(message -> new DeleteMessageBatchRequestEntry(message.getMessageId(), message.getReceiptHandle()))
-                        .collect(Collectors.toList());
-                if(!messagesReceipts.isEmpty())
-                    sqs.deleteMessageBatch(
-                            new DeleteMessageBatchRequest(
-                                    queueUrl,
-                                    messagesReceipts
-                            )
-                    );
-            }
-        }).run();
+            new Thread(() -> {
+                ReceiveMessageRequest receiveRequest = new ReceiveMessageRequest()
+                        .withQueueUrl(queueUrl)
+                        .withWaitTimeSeconds(20);
+
+                while(true) {
+                    log.info("Polling...");
+                    List<DeleteMessageBatchRequestEntry> messagesReceipts = sqs.receiveMessage(receiveRequest)
+                            .getMessages()
+                            .stream()
+                            .peek(message -> handleData(message.getBody()))
+                            .map(message -> new DeleteMessageBatchRequestEntry(message.getMessageId(), message.getReceiptHandle()))
+                            .collect(Collectors.toList());
+                    if(!messagesReceipts.isEmpty())
+                        sqs.deleteMessageBatch(
+                                new DeleteMessageBatchRequest(
+                                        queueUrl,
+                                        messagesReceipts
+                                )
+                        );
+                }
+            }).start();
+        }
     }
 
     @Override
