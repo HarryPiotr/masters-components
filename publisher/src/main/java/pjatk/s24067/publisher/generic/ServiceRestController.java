@@ -30,10 +30,10 @@ public class ServiceRestController {
     public void gatherMetrics(HttpServletRequest request, HttpServletResponse response) {
 
         String responseBody = Arrays.stream(context.getBeanDefinitionNames())
-                .filter(name -> name.endsWith("PublisherController"))
+                .filter(name -> name.endsWith("ProducerController"))
                 .flatMap(name -> {
                     List<PrometheusMetric> metrics = new ArrayList<>();
-                    PublisherController controller = (PublisherController) context.getBean(name);
+                    ProducerController controller = (ProducerController) context.getBean(name);
                     metrics.add(
                             new PrometheusMetric()
                                     .withName("producer_messages_sent_total")

@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-public abstract class PublisherController {
+public abstract class ProducerController {
 
     private long messagesSentTotal = 0;
     protected Random random = new Random();

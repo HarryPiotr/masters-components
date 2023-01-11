@@ -5,24 +5,25 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import lombok.NoArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pjatk.s24067.publisher.config.AppConfig;
-import pjatk.s24067.publisher.generic.PublisherController;
+import pjatk.s24067.publisher.generic.ProducerController;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("rabbitmq/publisher/pubsub")
+@RequestMapping("rabbitmq/pubsub")
 @NoArgsConstructor
-public class RabbitPubSubPublisherController extends PublisherController {
+@ConditionalOnExpression("${rabbitmq.pubsub.enabled}")
+public class RabbitPubSubProducerController extends ProducerController {
 
     @Autowired
     private AppConfig appConfig;

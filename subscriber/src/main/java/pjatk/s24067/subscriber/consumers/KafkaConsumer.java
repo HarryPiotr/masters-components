@@ -10,7 +10,7 @@ import pjatk.s24067.subscriber.config.AppConfig;
 
 @Component
 @ConditionalOnProperty(value = "kafka.enabled", havingValue = "true")
-public class KafkaConsumer extends GenericConsumer{
+public class KafkaConsumer extends GenericConsumer {
 
     @Autowired
     private AppConfig appConfig;
@@ -26,5 +26,4 @@ public class KafkaConsumer extends GenericConsumer{
     public String getConsumerType() {
         return "kafka";
     }
-
 }

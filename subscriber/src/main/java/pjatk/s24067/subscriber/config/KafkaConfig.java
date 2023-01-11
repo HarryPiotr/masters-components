@@ -9,5 +9,6 @@ public class KafkaConfig {
     private String bootstrapServer;
     private String consumerGroup;
     private String inboundTopic;
+    private String outboundTopic;
 
 }

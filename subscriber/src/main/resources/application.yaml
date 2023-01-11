@@ -1,7 +1,10 @@
 kafka:
   enabled: ${KAFKA_ENABLED:false}
+  camelEnabled: ${KAFKA_CAMEL_ENABLED:false}
+  streamsEnabled: ${KAFKA_STREAMS_ENABLED:false}
   bootstrapServer: ${KAFKA_BOOTSTRAP_SERVER:localhost:9094}
   inboundTopic: ${KAFKA_INBOUND_TOPIC:test-topic}
+  outboundTopic: ${KAFKA_OOUTBOUND_TOPIC:test-out-topic}
   consumerGroup: ${KAFKA_CONSUMER_GROUP:test-consumergroup-1}
 
 rabbitmq:

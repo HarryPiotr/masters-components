@@ -7,20 +7,22 @@ import org.apache.rocketmq.common.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pjatk.s24067.publisher.config.AppConfig;
-import pjatk.s24067.publisher.generic.PublisherController;
+import pjatk.s24067.publisher.generic.ProducerController;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("rocketmq/publisher")
+@RequestMapping("rocketmq")
 @NoArgsConstructor
-public class RocketMQPublisherController extends PublisherController {
+@ConditionalOnExpression("${rocketmq.enabled}")
+public class RocketMQProducerController extends ProducerController {
 
     @Autowired
     private AppConfig appConfig;

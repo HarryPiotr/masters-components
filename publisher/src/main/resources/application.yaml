@@ -3,6 +3,7 @@ server:
   port: 8080
 
 kafka:
+  enabled: ${KAFKA_ENABLED:false}
   bootstrapServer: ${KAFKA_BOOTSTRAP_SERVER:localhost:9094}
   outboundTopic: ${KAFKA_OUTBOUND_TOPIC:test-topic}
   acks: ${KAFKA_ACKS:1}
@@ -12,29 +13,38 @@ rabbitmq:
     hostname: ${RABBITMQ_SERVER_HOSTNAME:localhost}
     port: ${RABBITMQ_SERVER_PORT:9095}
   msq:
+    enabled: ${RABBITMQ_MSQ_ENABLED:false}
     outboundQueue: ${RABBITMQ_MSQ_OUTBOUND_QUEUE:test-queue-1}
     persistentMessages: ${RABBITMQ_MSQ_PERSISTENT_MESSAGES:false}
     exclusiveQueue: ${RABBITMQ_MSQ_EXCLUSIVE_QUEUE:true}
   pubsub:
+    enabled: ${RABBITMQ_PUBSUB_ENABLED:false}
     routingKey: ${RABBITMQ_PUBSUB_ROUTING_KEY:all}
     exchangeName: ${RABBITMQ_PUBSUB_EXCHANGE_NAME:test-topic-1}
     persistentMessages: ${RABBITMQ_PUBSUB_PERSISTENT_MESSAGES:false}
 
 rocketmq:
+  enabled: ${ROCKETMQ_ENABLED:false}
   nameserver: ${ROCKETMQ_NAMESERVER:localhost:9096}
   groupName: ${ROCKETMQ_GROUP_NAME:rocket-producer-group-1}
   outboundTopic: ${ROCKETMQ_OUTBOUND_TOPIC:test-topic-1}
 
 activemq:
+  enabled: ${ACTIVEMQ_ENABLED:false}
   server: ${ACTIVEMQ_SERVER:localhost:9101}
   outboundQueue: ${ACTIVEMQ_OUTBOUND_QUEUE:test-queue-1}
 
 nsq:
+  enabled: ${NSQ_ENABLED:false}
   server: ${NSQ_SERVER:localhost:9102}
   outboundTopic: ${NSQ_OUTBOUND_TOPIC:test-topic-1}
 
 sqs:
+  enabled: ${SQS_ENABLED:false}
   queueName: ${SQS_QUEUE_NAME:test-s24067-sqs-standard}
   region: ${SQS_REGION:eu-central-1}
   accessKeyId: ${SQS_ACCESS_KEY_ID}
   accessKeySecret: ${SQS_ACCESS_KEY_SECRET}
+
+dryrun:
+  enabled: ${DRYRUN_ENABLED:false}
